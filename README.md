@@ -216,3 +216,6 @@ cord_covid %>%
                    options = layersControlOptions(collapsed = TRUE))%>% 
   addLogo(img, url = "https://www.r-project.org/logo/") 
 ```` 
+#### Link de mapa interactivo
+
+[mapa mundial covid proyecto alumnos](https://rpubs.com/Paz-tech/721917)
