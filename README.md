@@ -74,7 +74,7 @@ view(covid_final)
 
 #### Reemplazando los 0 por N.A 
 
-```{r eval=FALSE}
+```{R eval=FALSE}
 cov_final2<-na_if(covid_final,0)
 view(cov_final2)
 
@@ -88,7 +88,7 @@ cord_covid <- st_as_sf(cov_final2, coords = c("Long_", "Lat"), crs = st_crs(4326
 
 ```
 
-#### Visualización
+#### Visualizacion
 
 ```{r eval =FALSE}
 cord_covid %>%
@@ -96,7 +96,7 @@ cord_covid %>%
   
 ```
 
-#### Añadiendo créditos
+#### Añadiendo creditos
 
 ```{r eval=FALSE  }
 cord_covid %>%
@@ -106,30 +106,45 @@ cord_covid %>%
 
 ```
 
-#### Nueva forma vusal y datos de cada punto
+#### Arreglando el zoom
+
+```{r eval=FALSE  }
+cord_covid %>%
+  leaflet(options = leafletOptions(zoomControl = TRUE,
+                                   minZoom = 2, maxZoom = 8,
+                                   dragging = TRUE)) %>%
+  addTiles(attribution = 'Mapa Covid-19') %>% 
+  addCircles(data = cord_covid)
+```
+
+#### Nueva forma visual y datos de cada punto
 
 ```{r eval=FALSE}
 
 cord_covid %>%
-  leaflet() %>%
+  leaflet(options = leafletOptions(zoomControl = TRUE,
+                                   minZoom = 2, maxZoom = 8,
+                                   dragging = TRUE)) %>%
   addTiles(attribution = 'Mapa Covid-19') %>%
-  addMarkers(data = cord_covid,
+  addMarkers(data = cord_covid,group = "a",
              popup =  popupTable(cord_covid),
              clusterOptions = markerClusterOptions())
-
 ```
 
-#### Añadiendo minimapa
+#### Añadiendo un minimapa
+
 ```{r eval=FALSE}
-ord_covid %>%
-  leaflet() %>%
+cord_covid %>%
+  leaflet(options = leafletOptions(zoomControl = TRUE,
+                                   minZoom = 2, maxZoom = 8,
+                                   dragging = TRUE)) %>%
   addTiles(attribution = 'Mapa Covid-19') %>%
   addMarkers(data = cord_covid,group = "a",
              popup =  popupTable(cord_covid),
              clusterOptions = markerClusterOptions()) %>%
   addMiniMap(
     tiles = providers$Esri.WorldStreetMap,
-    toggleDisplay = T,
+    toggleDisplay = TRUE,
     position = "bottomright")
 ```
 
@@ -137,7 +152,9 @@ ord_covid %>%
 
 ```{r eval=FALSE}
 cord_covid %>%
-  leaflet() %>%
+  leaflet(options = leafletOptions(zoomControl = TRUE,
+                                   minZoom = 2, maxZoom = 8,
+                                   dragging = TRUE)) %>%
   addTiles(attribution = 'Mapa Covid-19') %>%
   addMarkers(data = cord_covid,group = "a",
              popup =  popupTable(cord_covid),
@@ -150,17 +167,15 @@ cord_covid %>%
     icon = "fa-crosshairs", 
     title = "Ubicame",
     onClick = JS("function(btn, map){ map.locate({setView: true}); }")))
-
-
 ```
 
+#### Añadiendo capas esteticos y un boton de capas 
 
-
-#### Añadiendo capas esteticas y un boton de capas
-
-```{r eval = FALSE}
+```{r eval=FALSE}
 cord_covid %>%
-  leaflet() %>%
+  leaflet(options = leafletOptions(zoomControl = TRUE,
+                                   minZoom = 2, maxZoom = 8,
+                                   dragging = TRUE)) %>%
   addTiles(attribution = 'Mapa Covid-19') %>%
   addMarkers(data = cord_covid,group = "a",
              popup =  popupTable(cord_covid),
@@ -172,24 +187,32 @@ cord_covid %>%
   addEasyButton(easyButton(
     icon = "fa-crosshairs", 
     title = "Ubicame",
-    onClick = JS("function(btn, map){ map.locate({setView: true}); }"))) %>% 
-   addTiles(group = "OSM (default)") %>%
-  addProviderTiles(providers$Stamen.Toner, group = "Toner") %>%
-  addProviderTiles(providers$Stamen.TonerLite, group = "Toner Lite") %>%
-  addLayersControl(
-    baseGroups = c("OSM (default)", "Toner", "Toner Lite")) 
-
+    onClick = JS("function(btn, map){ map.locate({setView: true}); }"))) %>%
+  addProviderTiles("Stamen.TonerLite",
+                   group = "Toner"
+  ) %>%
+  addTiles(group = "OSM"
+  ) %>%
+  addProviderTiles("Esri.WorldTopoMap",    
+                   group = "Topo") %>%
+  addProviderTiles("OpenStreetMap.Mapnik", group = "Mapnik") %>%
+  addProviderTiles("CartoDB.Positron",     group = "CartoDB") %>%
+  addLayersControl(baseGroups = c("Toner", "OSM", "Topo", "Mapnik", "CartoDB"),
+                   options = layersControlOptions(collapsed = TRUE))
 ```
 
 #### Usamos una imagen para el logo
 
-```{r eval = FALSE}
+```{r eval=FALSE}
 img <- "https://www.r-project.org/logo/Rlogo.svg"
+```
 
-#Ahora, añadimos un logo
+#### Ahora, añadiremos un logo
+
+```{r eval=FALSE}
 cord_covid %>%
   leaflet(options = leafletOptions(zoomControl = TRUE,
-                                   minZoom = 1, maxZoom = 8,
+                                   minZoom = 2, maxZoom = 8,
                                    dragging = TRUE)) %>%
   addTiles(attribution = 'Mapa Covid-19') %>%
   addMarkers(data = cord_covid,group = "a",
@@ -215,7 +238,8 @@ cord_covid %>%
   addLayersControl(baseGroups = c("Toner", "OSM", "Topo", "Mapnik", "CartoDB"),
                    options = layersControlOptions(collapsed = TRUE))%>% 
   addLogo(img, url = "https://www.r-project.org/logo/") 
-```` 
+```
+
 #### Link de mapa interactivo
 
-[mapa mundial covid proyecto alumnos](https://rpubs.com/Paz-tech/721917)
+[mapa mundial covid proyecto alumnos](https://rpubs.com/Paz-tech/721924)
